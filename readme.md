@@ -1,6 +1,6 @@
 
 # Bibook 📙
-Este programa fue hecho con el objetivo de solucionar el siguiente ejercicio propuesto:
+Este programa fue hecho con el objetivo de solucionar el siguiente ejercicio:
 
       Problema 😵
       
