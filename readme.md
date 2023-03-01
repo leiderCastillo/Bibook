@@ -1,5 +1,5 @@
 
-![Texto alternativo de la imagen](./ejercicio.jpg)
+![Imagen con el ejercicio solicitado](./ejercicio.jpeg)
 
 Que tiene el programa ?
     Login: Aqui puede ingresar el bibliotecario con su numero de cc, y puede otorgar permisos y demas, ademas puede recibir los libros, esta accion lo que hace es verificar si fue prestado, y si no lo muestra como disponible.
