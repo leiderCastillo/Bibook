@@ -5,7 +5,10 @@
         <group>
             <file>file:/home/leiderc/Documentos/BibliotecaDB/AdministradorLibros/src/programa/OperacionesDB/libro.java</file>
             <file>file:/home/leiderc/Documentos/BibliotecaDB/AdministradorLibros/src/programa/OperacionesDB/usuario.java</file>
+            <file>file:/home/leiderc/Documentos/BibliotecaDB/AdministradorLibros/src/programa/OperacionesDB/bibliotecario.java</file>
             <file>file:/home/leiderc/Documentos/BibliotecaDB/AdministradorLibros/src/programa/Body.java</file>
+            <file>file:/home/leiderc/Documentos/BibliotecaDB/AdministradorLibros/src/programa/OperacionesDB/prestarLibro.java</file>
+            <file>file:/home/leiderc/Documentos/BibliotecaDB/AdministradorLibros/src/programa/Inicio.java</file>
         </group>
     </open-files>
 </project-private>
