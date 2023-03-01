@@ -94,6 +94,16 @@ public class Body extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
         PrestarLibroBuscar = new javax.swing.JButton();
+        EntregarLibro = new javax.swing.JDialog();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jSeparator6 = new javax.swing.JSeparator();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         BarraMenu = new javax.swing.JPanel();
         TextAgregarLibro = new javax.swing.JLabel();
         BtnAgregarLibro = new javax.swing.JButton();
@@ -620,6 +630,80 @@ public class Body extends javax.swing.JFrame {
         MensajePrestarLibroLayout.setVerticalGroup(
             MensajePrestarLibroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel2.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
+        jLabel2.setText("Entregar Libro");
+
+        jLabel3.setText("Codigo del Libro");
+
+        jLabel5.setText("Libro:");
+
+        jLabel6.setText("Usuario:");
+
+        jButton1.setBackground(new java.awt.Color(255, 204, 0));
+        jButton1.setText("Buscar");
+        jButton1.setActionCommand("k");
+        jButton1.setBorderPainted(false);
+
+        jButton2.setBackground(new java.awt.Color(255, 204, 0));
+        jButton2.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jButton2.setText("Confirmar");
+        jButton2.setActionCommand("k");
+        jButton2.setBorderPainted(false);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jSeparator6)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1))
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addGap(33, 33, 33)
+                .addComponent(jButton2)
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout EntregarLibroLayout = new javax.swing.GroupLayout(EntregarLibro.getContentPane());
+        EntregarLibro.getContentPane().setLayout(EntregarLibroLayout);
+        EntregarLibroLayout.setHorizontalGroup(
+            EntregarLibroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        EntregarLibroLayout.setVerticalGroup(
+            EntregarLibroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1197,20 +1281,56 @@ public class Body extends javax.swing.JFrame {
         
     }//GEN-LAST:event_PrestarLibroBuscarActionPerformed
 
+    
+    
+    public void llenarTablaPrestados(){
+        libro listLibro = new libro();
+        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
+        
+        modelo.setColumnIdentifiers(new String[] {"Fecha\nSalida","Fecha Max\nEntrega","Usuario","Libro","Bibliotecario"});
+
+        for(int i = modelo.getRowCount()-1; i >= 0; i--){
+            modelo.removeRow(i);
+        }
+
+        listLibro.libroPrestado(modelo);
+    }
+    
     private void MostrarPrestadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MostrarPrestadosActionPerformed
         MostrarBibliotecarios.setBackground(gris);
         MostrarDisponibles.setBackground(gris);
         MostrarLibros.setBackground(gris);
         MostrarPrestados.setBackground(naranja);
         MostrarUsuarios.setBackground(gris);
+        llenarTablaPrestados();
     }//GEN-LAST:event_MostrarPrestadosActionPerformed
 
+    
+    
+    
+    public void llenarTablaDisponibles(){
+        libro listLibro = new libro();
+        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
+        
+        modelo.setColumnIdentifiers(new String[] {"Nombre","Autor","Código","Edición","Páginas","Genero"});
+
+        for(int i = modelo.getRowCount()-1; i >= 0; i--){
+            modelo.removeRow(i);
+        }
+
+        listLibro.libroDisponible(modelo);
+    }
+    
     private void MostrarDisponiblesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MostrarDisponiblesActionPerformed
         MostrarBibliotecarios.setBackground(gris);
         MostrarDisponibles.setBackground(naranja);
         MostrarLibros.setBackground(gris);
         MostrarPrestados.setBackground(gris);
         MostrarUsuarios.setBackground(gris);
+        //----------------------------------------
+        llenarTablaDisponibles();
+        
+        
     }//GEN-LAST:event_MostrarDisponiblesActionPerformed
 
     public static void main(String args[]) {
@@ -1234,6 +1354,7 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JButton BtnPrestarLibro;
     private javax.swing.JButton BtnPrestarLibroAgregarUsuario;
     private javax.swing.JButton ButtonAgregarLibro;
+    private javax.swing.JDialog EntregarLibro;
     private javax.swing.JTextField FieldAgregarBibliClave;
     private javax.swing.JTextField FieldAgregarBibliId;
     private javax.swing.JTextField FieldAgregarBibliNombre;
@@ -1271,7 +1392,9 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JLabel TextAgregarUsr;
     private javax.swing.JLabel TextListaNegra;
     private javax.swing.JLabel TextPrestarLibro;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton17;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1284,6 +1407,7 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -1292,14 +1416,18 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -1311,5 +1439,7 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

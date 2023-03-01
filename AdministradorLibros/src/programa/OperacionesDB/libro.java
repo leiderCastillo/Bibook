@@ -27,6 +27,53 @@ public class libro {
         this.paginas = Paginas;
         this.genero = Genero;
     }
+    
+    
+    
+    public void libroDisponible(DefaultTableModel modelo){
+        try {
+            String sql="call  consultarLibrosDisponibles();";
+            CallableStatement cmd=con.prepareCall(sql);
+            ResultSet rs= cmd.executeQuery();
+            while(rs.next()){
+                Object[] datos=new Object[6];
+              
+                for(int i=0;i<=5;i++){
+                    datos[i]=rs.getString(i+1);
+                    System.out.println(rs.getString(i+1));
+                }
+                modelo.addRow(datos);
+            }
+            cmd.close();
+            con.close();
+           
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void libroPrestado(DefaultTableModel modelo){
+        try {
+            String sql="call librosPrestados();";
+            CallableStatement cmd=con.prepareCall(sql);
+            ResultSet rs= cmd.executeQuery();
+            while(rs.next()){
+                Object[] datos=new Object[5];
+              
+                for(int i=0;i<=4;i++){
+                    datos[i]=rs.getString(i+1);
+                    System.out.println(rs.getString(i+1));
+                }
+                modelo.addRow(datos);
+            }
+            cmd.close();
+            con.close();
+           
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     public Vector librosDisponibles(){
         Vector<String> vector = new Vector<String>();
         try {
