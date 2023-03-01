@@ -39,7 +39,7 @@ Esta carpeta sirve de soporte para el funcionamiento completo de Body, es la enc
 
 ## Tecnologías utilizadas 🙊
 
-![](https://img.shields.io/badge/OpenJDK-19.0.2+7-<COLOR>.svg)
+![](https://img.shields.io/badge/OpenJDK-11-<COLOR>.svg)
 ![](https://img.shields.io/badge/MariaDB-gray)
 ![](https://img.shields.io/badge/NetBeans-gray)
 ![](https://img.shields.io/badge/Manjaro-gray)
