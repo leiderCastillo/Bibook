@@ -17,7 +17,7 @@ Este programa fue hecho con el objetivo de solucionar el siguiente ejercicio:
       2. Debe existir una “lista negra” con los usuarios que no han entregado a tiempo el libro
 
 
-## Modulos del programa
+## Modulos del programa 👷
 Estas son las partes en las que se divide el programa y que funcionalidades tiene.
 ### Inicio: 
 Aqui puede ingresar el bibliotecario con su numero de identificación y clave.
@@ -37,7 +37,7 @@ Todo el sistema, donde se puede realizar
 ### OperacionesDB:
 Esta carpeta sirve de soporte para el funcionamiento completo de Body, es la encargada de conectarce a la base de datos y realizar las consultas.
 
-## Tecnologías utilizadas
+## Tecnologías utilizadas 🙊
 
 ![](https://img.shields.io/badge/OpenJDK-19.0.2+7-<COLOR>.svg)
 ![](https://img.shields.io/badge/MariaDB-gray)
@@ -45,7 +45,7 @@ Esta carpeta sirve de soporte para el funcionamiento completo de Body, es la enc
 ![](https://img.shields.io/badge/Manjaro-gray)
 ![](https://img.shields.io/badge/MySqlWorkBench-gray)
 
-## Procedimientos
+## Procedimientos 👾
 Primero se generan las tablas en MySQL Workbench, teniendo en cuenta las reglas normalización(1FN,2FN,3FN).
 
 ![Imagen Entidad Relación](Img/ModeloEntidadRelacion.png)
