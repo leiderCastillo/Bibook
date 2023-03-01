@@ -1,19 +1,14 @@
 
 # Bibook 📙
-Este programa fue hecho con el objetivo de solucionar el ejercicio propuesto en la siguiente imagen:
+Este programa fue hecho con el objetivo de solucionar el siguiente ejercicio propuesto:
 
-Base de datos para biblioteca
-
-      Problema
+      Problema 😵
+      
       Se requiere una base de datos para gestionar el préstamo de libros en una biblioteca
-
       1. Se debe registrar cada bibliotecario en una lista
-
       2. Se debe registrar cada usuario de la biblioteca con mínimo nombre, identificación,
       teléfono, tipo de documento.
-
       3. Se deben registrar los libros disponibles en la biblioteca
-
       4. Se debe llevar un listado de los libros prestados
 
       Consideraciones
