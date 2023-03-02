@@ -35,10 +35,11 @@ public class libro {
             String sql="call  consultarLibrosDisponibles();";
             CallableStatement cmd=con.prepareCall(sql);
             ResultSet rs= cmd.executeQuery();
+            
             while(rs.next()){
                 Object[] datos=new Object[6];
-              
                 for(int i=0;i<=5;i++){
+                    System.out.print(rs.getString(i));
                     datos[i]=rs.getString(i+1);
                     System.out.println(rs.getString(i+1));
                 }

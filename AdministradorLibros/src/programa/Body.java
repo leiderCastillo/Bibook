@@ -1,8 +1,8 @@
-
 package programa;
-
 import java.awt.Color;
 import java.time.LocalDate;
+import java.util.Vector;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import programa.OperacionesDB.bibliotecario;
@@ -16,6 +16,87 @@ public class Body extends javax.swing.JFrame {
     Color gris = new Color(238,238,238);
     Color naranja = new Color(255,204,0);
     int codigoLibroPrestado = 0;
+    
+    //Funciones
+    private int obtenerCodigoLibro(){
+        try{
+            String valor = SeleccionarLibro.getSelectedValue();
+            System.out.println(valor);
+            String valornS = "";
+            for(int i = 0; i < valor.length() && (valor.charAt(i) != '.');i++){
+                valornS += valor.charAt(i) + "";
+            }
+            return Integer.parseInt(valornS);
+        }catch(NumberFormatException e){
+            System.out.print("Error al obtener codigo: "+e);
+            return 0;
+        }
+    }
+    
+    private void llenarTablaUsuarios(){
+        usuario listUsr = new usuario();
+        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
+        modelo.setColumnIdentifiers(new String[] {"Identificación","Nombre","Tipo ID","Teléfono"});
+        for(int i = modelo.getRowCount()-1; i >= 0; i--){
+            modelo.removeRow(i);
+        }
+        listUsr.LLenarDatos(modelo);
+    }
+    
+    private int numeroLibroSolo(){
+        if (FieldAgregarLibroCodigo.getText().isEmpty()){
+            return 0;
+        }else{
+            try {
+                int n = Integer.parseInt(FieldAgregarLibroCodigo.getText());
+                return n;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Parece que no ingreso un número en código");
+                return 0;
+            }
+        }
+    }
+    
+    private void llenarTablaLibros(){
+        libro listLib = new libro(numeroLibroSolo(),FieldAgregarLibroAutor.getText(),FieldAgregarLibroNombre.getText(),FieldAgregarLibroEdicion.getText(),FieldAgregarLibroPaginas.getText(),FieldAgregarLibroGenero.getText());
+        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel(); 
+        modelo.setColumnIdentifiers(new String[] {"Id","Autor","Nombre","Edición","Páginas","Género"});
+        for(int i = modelo.getRowCount()-1; i >= 0; i--){
+            modelo.removeRow(i);
+        }
+        listLib.LLenarDatos(modelo);
+    }
+    
+    private void llenarTablaBibliotecarios(){
+        bibliotecario listBibli = new bibliotecario();
+        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
+        modelo.setColumnIdentifiers(new String[] {"Id","Nombre","Teléfono","Clave"});
+        for(int i = modelo.getRowCount()-1; i >= 0; i--){
+            modelo.removeRow(i);
+        }
+        listBibli.LLenarDatos(modelo);
+    }
+    
+    private void llenarTablaPrestados(){
+        libro listLibro = new libro();
+        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
+        modelo.setColumnIdentifiers(new String[] {"Fecha\nSalida","Fecha Max\nEntrega","Usuario","Libro","Bibliotecario"});
+        for(int i = modelo.getRowCount()-1; i >= 0; i--){
+            modelo.removeRow(i);
+        }
+        listLibro.libroPrestado(modelo);
+    }
+    
+    private void llenarTablaDisponibles(){
+        libro listLibro = new libro();
+        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
+        modelo.setColumnIdentifiers(new String[] {"Nombre","Autor","Código","Edición","Páginas","Genero"});
+        for(int i = modelo.getRowCount()-1; i >= 0; i--){
+            modelo.removeRow(i);
+        }
+        listLibro.libroDisponible(modelo);
+    }
+    //---------
     
 
     public Body() {
@@ -1070,6 +1151,7 @@ public class Body extends javax.swing.JFrame {
         MensajePrestarLibro.setLocationRelativeTo(this);
         MensajePrestarLibro.setModal(true);
         libro consultaLibro = new libro();
+        SeleccionarLibro.setFocusable(false);
         SeleccionarLibro.setListData(consultaLibro.librosDisponibles());
         MensajePrestarLibro.setVisible(true);
         //-------------------------
@@ -1123,29 +1205,11 @@ public class Body extends javax.swing.JFrame {
         FieldAgregarBibliTel.setText("");
         MensajeAgregarBibliotecario.setVisible(false);
     }//GEN-LAST:event_BtnAgregarBibliActionPerformed
-    
-    int obtenerCodigoLibro(){
-        try{
-            String valor = SeleccionarLibro.getSelectedValue();
-            System.out.println(valor);
-            String valornS = "";
-
-            for(int i = 0; i < valor.length() && (valor.charAt(i) != '.');i++){
-                valornS += valor.charAt(i) + "";
-                System.out.println(valornS);
-            }
-            return Integer.parseInt(valornS);
-        }catch(Exception e){
-            System.out.print("Error al obtener codigo: "+e);
-            return 0;
         
-        }
-    }
-    
     private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
         
         prestarLibro nuevoPrestar = new prestarLibro(
-            PrestarLibroFecha.getText(),
+            PrestarLibroFecha.getText().substring(6,PrestarLibroFecha.getText().length()),
             PrestarLibroFechaLLegada.getText(),
             Administrador.getId(),
             NoIdPrestarLibro.getText(),
@@ -1177,7 +1241,7 @@ public class Body extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnPrestarLibroAgregarUsuarioActionPerformed
 
     private void PrestarLibroTiempoMaxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_PrestarLibroTiempoMaxPropertyChange
-        
+   
     }//GEN-LAST:event_PrestarLibroTiempoMaxPropertyChange
 
     private void PrestarLibroTiempoMaxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_PrestarLibroTiempoMaxItemStateChanged
@@ -1194,19 +1258,6 @@ public class Body extends javax.swing.JFrame {
         }        
         PrestarLibroFechaLLegada.setText(nueva.of(nueva.getYear(), nueva.getMonthValue()+mesSeleccion, nueva.getDayOfMonth()).toString());    
     }//GEN-LAST:event_PrestarLibroTiempoMaxItemStateChanged
-
-    public void llenarTablaUsuarios(){
-        usuario listUsr = new usuario();
-        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
-        
-        modelo.setColumnIdentifiers(new String[] {"Identificación","Nombre","Tipo ID","Teléfono"});
-
-        for(int i = modelo.getRowCount()-1; i >= 0; i--){
-            modelo.removeRow(i);
-        }
-
-        listUsr.LLenarDatos(modelo);
-    }
     
     private void MostrarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MostrarUsuariosActionPerformed
         MostrarBibliotecarios.setBackground(gris);
@@ -1218,33 +1269,6 @@ public class Body extends javax.swing.JFrame {
         
     }//GEN-LAST:event_MostrarUsuariosActionPerformed
     
-    int numeroLibroSolo(){
-        if (FieldAgregarLibroCodigo.getText().isEmpty()){
-            return 0;
-        }else{
-            try {
-                int n = Integer.parseInt(FieldAgregarLibroCodigo.getText());
-                return n;
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Parece que no ingreso un número en código");
-                return 0;
-            }
-        }
-    }
-    
-    public void llenarTablaLibros(){
-        libro listLib = new libro(numeroLibroSolo(),FieldAgregarLibroAutor.getText(),FieldAgregarLibroNombre.getText(),FieldAgregarLibroEdicion.getText(),FieldAgregarLibroPaginas.getText(),FieldAgregarLibroGenero.getText());
-        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
-        
-        modelo.setColumnIdentifiers(new String[] {"Id","Autor","Nombre","Edición","Páginas","Género"});
-
-        for(int i = modelo.getRowCount()-1; i >= 0; i--){
-            modelo.removeRow(i);
-        }
-
-        listLib.LLenarDatos(modelo);
-    }
-    
     private void MostrarLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MostrarLibrosActionPerformed
         
         MostrarBibliotecarios.setBackground(gris);
@@ -1254,20 +1278,7 @@ public class Body extends javax.swing.JFrame {
         MostrarUsuarios.setBackground(gris);
         llenarTablaLibros();
     }//GEN-LAST:event_MostrarLibrosActionPerformed
-
-    public void llenarTablaBibliotecarios(){
-        bibliotecario listBibli = new bibliotecario();
-        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
-        
-        modelo.setColumnIdentifiers(new String[] {"Id","Nombre","Teléfono","Clave"});
-
-        for(int i = modelo.getRowCount()-1; i >= 0; i--){
-            modelo.removeRow(i);
-        }
-
-        listBibli.LLenarDatos(modelo);
-    }
-    
+ 
     private void MostrarBibliotecariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MostrarBibliotecariosActionPerformed
         MostrarBibliotecarios.setBackground(naranja);
         MostrarDisponibles.setBackground(gris);
@@ -1294,21 +1305,6 @@ public class Body extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_PrestarLibroBuscarActionPerformed
-
-    
-    
-    public void llenarTablaPrestados(){
-        libro listLibro = new libro();
-        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
-        
-        modelo.setColumnIdentifiers(new String[] {"Fecha\nSalida","Fecha Max\nEntrega","Usuario","Libro","Bibliotecario"});
-
-        for(int i = modelo.getRowCount()-1; i >= 0; i--){
-            modelo.removeRow(i);
-        }
-
-        listLibro.libroPrestado(modelo);
-    }
     
     private void MostrarPrestadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MostrarPrestadosActionPerformed
         MostrarBibliotecarios.setBackground(gris);
@@ -1318,23 +1314,7 @@ public class Body extends javax.swing.JFrame {
         MostrarUsuarios.setBackground(gris);
         llenarTablaPrestados();
     }//GEN-LAST:event_MostrarPrestadosActionPerformed
-
-    
-    
-    
-    public void llenarTablaDisponibles(){
-        libro listLibro = new libro();
-        DefaultTableModel modelo= (DefaultTableModel) TablaPrincipal.getModel();
-        
-        modelo.setColumnIdentifiers(new String[] {"Nombre","Autor","Código","Edición","Páginas","Genero"});
-
-        for(int i = modelo.getRowCount()-1; i >= 0; i--){
-            modelo.removeRow(i);
-        }
-
-        listLibro.libroDisponible(modelo);
-    }
-    
+   
     private void MostrarDisponiblesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MostrarDisponiblesActionPerformed
         MostrarBibliotecarios.setBackground(gris);
         MostrarDisponibles.setBackground(naranja);
