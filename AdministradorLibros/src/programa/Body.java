@@ -2,7 +2,6 @@ package programa;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.util.Vector;
-import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import programa.OperacionesDB.bibliotecario;
@@ -16,6 +15,17 @@ public class Body extends javax.swing.JFrame {
     Color gris = new Color(238,238,238);
     Color naranja = new Color(255,204,0);
     int codigoLibroPrestado = 0;
+    boolean UsuarioExistentePrestar = false;
+    public static Vector<String> Libros = new Vector<String>();
+    
+    private void ComprobarLlenadoPrestarLibro(){
+        int Compfecha = PrestarLibroTiempoMax.getSelectedIndex();
+        if(Compfecha!=0 && NoIdPrestarLibro.getText().length() != 0 && SeleccionarLibro.getSelectedValue() != null){
+            AgregarPrestarLibro.setEnabled(true);
+        }else{
+            AgregarPrestarLibro.setEnabled(false);
+        }
+    }
     
     //Funciones
     private int obtenerCodigoLibro(){
@@ -101,6 +111,7 @@ public class Body extends javax.swing.JFrame {
 
     public Body() {
         initComponents();
+        try{System.out.println(Administrador.getNombre());}catch(Exception e){System.out.println(e);}
         llenarTablaLibros();
         MostrarBibliotecarios.setBackground(gris);
         MostrarDisponibles.setBackground(gris);
@@ -156,9 +167,8 @@ public class Body extends javax.swing.JFrame {
         MensajePrestarLibro = new javax.swing.JDialog();
         jPanel6 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
-        jButton17 = new javax.swing.JButton();
-        jLabel29 = new javax.swing.JLabel();
-        jLabel30 = new javax.swing.JLabel();
+        AgregarPrestarLibro = new javax.swing.JButton();
+        PrestarLibroBibliotecario = new javax.swing.JLabel();
         PrestarLibroFechaLLegada = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
         PrestarLibroTiempoMax = new javax.swing.JComboBox<>();
@@ -167,7 +177,7 @@ public class Body extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         jLabel34 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        ScrollSeleccionarLibro = new javax.swing.JScrollPane();
         SeleccionarLibro = new javax.swing.JList<>();
         NoIdPrestarLibro = new javax.swing.JTextField();
         PrestarLibroNombre = new javax.swing.JLabel();
@@ -176,7 +186,7 @@ public class Body extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
         PrestarLibroBuscar = new javax.swing.JButton();
-        EntregarLibro = new javax.swing.JDialog();
+        MensajeEntregarLibro = new javax.swing.JDialog();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         EntregarLibroCodigo = new javax.swing.JTextField();
@@ -186,6 +196,9 @@ public class Body extends javax.swing.JFrame {
         EntregaLibroNombreUsuario = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         ConfirmarEntrega = new javax.swing.JButton();
+        MensajeListaNegra = new javax.swing.JDialog();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         BarraMenu = new javax.swing.JPanel();
         TextAgregarLibro = new javax.swing.JLabel();
         BtnAgregarLibro = new javax.swing.JButton();
@@ -526,23 +539,20 @@ public class Body extends javax.swing.JFrame {
         jLabel22.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
         jLabel22.setText("Prestar Libro");
 
-        jButton17.setBackground(new java.awt.Color(255, 204, 0));
-        jButton17.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
-        jButton17.setText("Agregar");
-        jButton17.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jButton17.setBorderPainted(false);
-        jButton17.setFocusPainted(false);
-        jButton17.addActionListener(new java.awt.event.ActionListener() {
+        AgregarPrestarLibro.setBackground(new java.awt.Color(255, 204, 0));
+        AgregarPrestarLibro.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        AgregarPrestarLibro.setText("Agregar");
+        AgregarPrestarLibro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        AgregarPrestarLibro.setBorderPainted(false);
+        AgregarPrestarLibro.setFocusPainted(false);
+        AgregarPrestarLibro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton17ActionPerformed(evt);
+                AgregarPrestarLibroActionPerformed(evt);
             }
         });
 
-        jLabel29.setFont(new java.awt.Font("Noto Sans", 0, 13)); // NOI18N
-        jLabel29.setText("No Registro: 0000001");
-
-        jLabel30.setFont(new java.awt.Font("Noto Sans", 0, 13)); // NOI18N
-        jLabel30.setText("Bibliotecario: Nombre del bibliotecario que presto");
+        PrestarLibroBibliotecario.setFont(new java.awt.Font("Noto Sans", 0, 13)); // NOI18N
+        PrestarLibroBibliotecario.setText("Bibliotecario: Nombre del bibliotecario que presto");
 
         PrestarLibroFechaLLegada.setFont(new java.awt.Font("Noto Sans", 0, 13)); // NOI18N
         PrestarLibroFechaLLegada.setText("Fecha: 00/00/0000");
@@ -576,7 +586,12 @@ public class Body extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane3.setViewportView(SeleccionarLibro);
+        SeleccionarLibro.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                SeleccionarLibroValueChanged(evt);
+            }
+        });
+        ScrollSeleccionarLibro.setViewportView(SeleccionarLibro);
 
         NoIdPrestarLibro.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -631,24 +646,21 @@ public class Body extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(NoIdPrestarLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(PrestarLibroBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(PrestarLibroBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                     .addComponent(PrestarLibroTelefono)
                     .addComponent(PrestarLibroNombre)
                     .addComponent(jSeparator4)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel29, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE))
-                    .addComponent(jLabel30, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PrestarLibroBibliotecario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(PrestarLibroFecha, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator3)
-                    .addComponent(jScrollPane3)
+                    .addComponent(ScrollSeleccionarLibro)
                     .addComponent(jLabel35)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(PrestarLibroTiempoMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(PrestarLibroFechaLLegada, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AgregarPrestarLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel32)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel34)
@@ -661,12 +673,8 @@ public class Body extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel22)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel29, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(3, 3, 3)))
-                .addComponent(jLabel30, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+                .addComponent(jLabel22)
+                .addComponent(PrestarLibroBibliotecario, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PrestarLibroFecha, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -697,9 +705,9 @@ public class Body extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel35, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ScrollSeleccionarLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton17)
+                .addComponent(AgregarPrestarLibro)
                 .addGap(30, 30, 30))
         );
 
@@ -787,15 +795,41 @@ public class Body extends javax.swing.JFrame {
                 .addContainerGap(56, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout EntregarLibroLayout = new javax.swing.GroupLayout(EntregarLibro.getContentPane());
-        EntregarLibro.getContentPane().setLayout(EntregarLibroLayout);
-        EntregarLibroLayout.setHorizontalGroup(
-            EntregarLibroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout MensajeEntregarLibroLayout = new javax.swing.GroupLayout(MensajeEntregarLibro.getContentPane());
+        MensajeEntregarLibro.getContentPane().setLayout(MensajeEntregarLibroLayout);
+        MensajeEntregarLibroLayout.setHorizontalGroup(
+            MensajeEntregarLibroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        EntregarLibroLayout.setVerticalGroup(
-            EntregarLibroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        MensajeEntregarLibroLayout.setVerticalGroup(
+            MensajeEntregarLibroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(jTable1);
+
+        javax.swing.GroupLayout MensajeListaNegraLayout = new javax.swing.GroupLayout(MensajeListaNegra.getContentPane());
+        MensajeListaNegra.getContentPane().setLayout(MensajeListaNegraLayout);
+        MensajeListaNegraLayout.setHorizontalGroup(
+            MensajeListaNegraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
+        );
+        MensajeListaNegraLayout.setVerticalGroup(
+            MensajeListaNegraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MensajeListaNegraLayout.createSequentialGroup()
+                .addGap(0, 42, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1105,9 +1139,9 @@ public class Body extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        EntregarLibro.setVisible(true);
-        EntregarLibro.setLocationRelativeTo(this);
-        EntregarLibro.setSize(400,300);
+        MensajeEntregarLibro.setVisible(true);
+        MensajeEntregarLibro.setLocationRelativeTo(this);
+        MensajeEntregarLibro.setSize(400,300);
         ConfirmarEntrega.setEnabled(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -1142,6 +1176,20 @@ public class Body extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnAgregarBiblioActionPerformed
 
     private void BtnPrestarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrestarLibroActionPerformed
+
+        UsuarioExistentePrestar = false;
+        PrestarLibroBibliotecario.setText("Bibliotecario: "+Administrador.getNombre());
+        //Reiniciando Todo
+        PrestarLibroTiempoMax.setSelectedIndex(0);
+        PrestarLibroNombre.setText("Libro: ");
+        PrestarLibroTelefono.setText("Teléfono: ");
+        NoIdPrestarLibro.setText("");
+        SeleccionarLibro.clearSelection();
+        SeleccionarLibro.removeAll();
+        AgregarPrestarLibro.setEnabled(false);
+         SeleccionarLibro.setListData(new Vector<String>());
+        
+        //----------------
         //Accion cuando se presiona agregar nuevo Libro
         //Mostrar mensaje Emergente
         LocalDate fecha = LocalDate.now();
@@ -1151,8 +1199,8 @@ public class Body extends javax.swing.JFrame {
         MensajePrestarLibro.setLocationRelativeTo(this);
         MensajePrestarLibro.setModal(true);
         libro consultaLibro = new libro();
-        SeleccionarLibro.setFocusable(false);
-        SeleccionarLibro.setListData(consultaLibro.librosDisponibles());
+        consultaLibro.librosDisponibles();
+        SeleccionarLibro.setListData(Libros);
         MensajePrestarLibro.setVisible(true);
         //-------------------------
     }//GEN-LAST:event_BtnPrestarLibroActionPerformed
@@ -1206,7 +1254,9 @@ public class Body extends javax.swing.JFrame {
         MensajeAgregarBibliotecario.setVisible(false);
     }//GEN-LAST:event_BtnAgregarBibliActionPerformed
         
-    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+    
+    private void AgregarPrestarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarPrestarLibroActionPerformed
+        
         
         prestarLibro nuevoPrestar = new prestarLibro(
             PrestarLibroFecha.getText().substring(6,PrestarLibroFecha.getText().length()),
@@ -1216,19 +1266,14 @@ public class Body extends javax.swing.JFrame {
             obtenerCodigoLibro(),
             0
         );
-        
         nuevoPrestar.realizar();
+        SeleccionarLibro.clearSelection();
         LocalDate fecha = LocalDate.now();
         PrestarLibroFecha.setText("Fecha: "+fecha.toString());
         PrestarLibroFechaLLegada.setText(fecha.toString());
-        libro consultaLibro = new libro();
-        SeleccionarLibro.setListData(consultaLibro.librosDisponibles());
-        NoIdPrestarLibro.setText("");
-        MensajePrestarLibro.setVisible(false);
+        MensajePrestarLibro.dispose();
         
-        
-        
-    }//GEN-LAST:event_jButton17ActionPerformed
+    }//GEN-LAST:event_AgregarPrestarLibroActionPerformed
 
     private void BtnPrestarLibroAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrestarLibroAgregarUsuarioActionPerformed
         //Accion cuando se presiona agregar nuevo Libro
@@ -1248,7 +1293,7 @@ public class Body extends javax.swing.JFrame {
         //Aumentar los meses a la fecha
         int mesSeleccion = 0;
         LocalDate nueva = LocalDate.now();
-        
+        ComprobarLlenadoPrestarLibro();
         switch (PrestarLibroTiempoMax.getSelectedIndex()) {
             case 0:mesSeleccion = 0;break;
             case 1:mesSeleccion = 2;break;
@@ -1299,9 +1344,15 @@ public class Body extends javax.swing.JFrame {
     private void PrestarLibroBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrestarLibroBuscarActionPerformed
         usuario consulta = new usuario();
         String valores[] =consulta.consultar(NoIdPrestarLibro.getText());
+        ComprobarLlenadoPrestarLibro();
         
         PrestarLibroNombre.setText("Nombre: "+valores[0]);
         PrestarLibroTelefono.setText("Teléfono: "+valores[1]);
+        if(valores[0] == null){
+            UsuarioExistentePrestar = false;
+        }else{
+            UsuarioExistentePrestar = true;
+        }
         
         
     }//GEN-LAST:event_PrestarLibroBuscarActionPerformed
@@ -1340,12 +1391,12 @@ public class Body extends javax.swing.JFrame {
                 ConfirmarEntrega.setEnabled(true);
             }else{
                 ConfirmarEntrega.setEnabled(false);
-                JOptionPane.showMessageDialog(EntregarLibro, "No se encontro el libro prestado");
+                JOptionPane.showMessageDialog(MensajeEntregarLibro, "No se encontro el libro prestado");
                 
             }
             
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(EntregarLibro, "El código no es un valor numérico");
+            JOptionPane.showMessageDialog(MensajeEntregarLibro, "El código no es un valor numérico");
         }
             
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -1353,10 +1404,15 @@ public class Body extends javax.swing.JFrame {
     private void ConfirmarEntregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmarEntregaActionPerformed
         prestarLibro consulta = new prestarLibro();
         consulta.entregar(codigoLibroPrestado);
-        EntregarLibro.setVisible(false);
+        MensajeEntregarLibro.setVisible(false);
         EntregaLibroNombreLibro.setText("Fecha: ");
         EntregaLibroNombreUsuario.setText("Nombre: ");
     }//GEN-LAST:event_ConfirmarEntregaActionPerformed
+
+    private void SeleccionarLibroValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_SeleccionarLibroValueChanged
+        ComprobarLlenadoPrestarLibro();
+        System.out.println(SeleccionarLibro.getSelectedIndex());
+    }//GEN-LAST:event_SeleccionarLibroValueChanged
 
     public static void main(String args[]) {
         
@@ -1368,6 +1424,7 @@ public class Body extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AgregarPrestarLibro;
     private javax.swing.JPanel BarraLateral;
     private javax.swing.JPanel BarraMenu;
     private javax.swing.JButton BotonAgregarUsuario;
@@ -1382,7 +1439,6 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JButton ConfirmarEntrega;
     private javax.swing.JLabel EntregaLibroNombreLibro;
     private javax.swing.JLabel EntregaLibroNombreUsuario;
-    private javax.swing.JDialog EntregarLibro;
     private javax.swing.JTextField EntregarLibroCodigo;
     private javax.swing.JTextField FieldAgregarBibliClave;
     private javax.swing.JTextField FieldAgregarBibliId;
@@ -1401,6 +1457,8 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JDialog MensajeAgregarBibliotecario;
     private javax.swing.JDialog MensajeAgregarLibro;
     private javax.swing.JDialog MensajeAgregarUsr;
+    private javax.swing.JDialog MensajeEntregarLibro;
+    private javax.swing.JDialog MensajeListaNegra;
     private javax.swing.JDialog MensajePrestarLibro;
     private javax.swing.JButton MostrarBibliotecarios;
     private javax.swing.JButton MostrarDisponibles;
@@ -1408,12 +1466,14 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JButton MostrarPrestados;
     private javax.swing.JButton MostrarUsuarios;
     private javax.swing.JTextField NoIdPrestarLibro;
+    private javax.swing.JLabel PrestarLibroBibliotecario;
     private javax.swing.JButton PrestarLibroBuscar;
     private javax.swing.JLabel PrestarLibroFecha;
     private javax.swing.JLabel PrestarLibroFechaLLegada;
     private javax.swing.JLabel PrestarLibroNombre;
     private javax.swing.JLabel PrestarLibroTelefono;
     private javax.swing.JComboBox<String> PrestarLibroTiempoMax;
+    private javax.swing.JScrollPane ScrollSeleccionarLibro;
     private javax.swing.JList<String> SeleccionarLibro;
     private javax.swing.JTable TablaPrincipal;
     private javax.swing.JLabel TextAgregarBiblio;
@@ -1422,7 +1482,6 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JLabel TextListaNegra;
     private javax.swing.JLabel TextPrestarLibro;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1443,9 +1502,7 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
@@ -1466,5 +1523,6 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,6 +4,7 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
+import programa.Body;
 
 public class libro {
     private int id;
@@ -34,21 +35,19 @@ public class libro {
         try {
             String sql="call  consultarLibrosDisponibles();";
             CallableStatement cmd=con.prepareCall(sql);
-            ResultSet rs= cmd.executeQuery();
-            
+            ResultSet rs= cmd.executeQuery(); 
             while(rs.next()){
                 Object[] datos=new Object[6];
                 for(int i=0;i<=5;i++){
-                    System.out.print(rs.getString(i));
                     datos[i]=rs.getString(i+1);
-                    System.out.println(rs.getString(i+1));
                 }
                 modelo.addRow(datos);
             }
             cmd.close();
+            rs.close();
             con.close();
            
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -67,6 +66,7 @@ public class libro {
                 }
                 modelo.addRow(datos);
             }
+            rs.close();
             cmd.close();
             con.close();
            
@@ -75,20 +75,21 @@ public class libro {
         }
     }
     
-    public Vector librosDisponibles(){
-        Vector<String> vector = new Vector<String>();
+    public void librosDisponibles(){
+
         try {
+            Body.Libros.clear();
             String sql = "call  consultarLibrosDisponibles();";
             CallableStatement cmd = con.prepareCall(sql);
             ResultSet rs = cmd.executeQuery();
             while(rs.next()){
-                vector.add(rs.getInt(3)+".  "+rs.getString(1)+" ("+(rs.getString(2))+")");
+                Body.Libros.add(rs.getInt(3)+".  "+rs.getString(1)+" ("+(rs.getString(2))+")");
             }
-            return vector;
+            rs.close();
+            cmd.close();
            
         } catch (Exception e) {
             System.out.println("ERROR, EN libros DIsponibles"+e);
-             return vector;
         }
         
         

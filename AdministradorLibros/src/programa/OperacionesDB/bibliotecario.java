@@ -91,6 +91,10 @@ public class bibliotecario {
         }
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
     public String getId() {
         return id;
     }
