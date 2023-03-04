@@ -50,7 +50,7 @@ Primero se generan las tablas en MySQL Workbench, teniendo en cuenta las reglas 
 
 ![Imagen Entidad Relación](Img/ModeloEntidadRelacion.png)
 
-Una vez se tiene bien estructuradas las tablas, se genera el codigo y se integra en el administrador de bases de datos utilizado, en este caso __DBeaver__, y se comienza a generar los procedimientos, con el fin de dejar todo listo para que en la aplicación de Java, las consultas sean más cortas y sencillas de entender.
+Una vez se tiene bien estructuradas las tablas, se genera el codigo y se integra en el administrador de bases de datos utilizado, en este caso __DBeaver__, y se comienza a generar los procedimientos, con el fin de dejar todo listo para que en la aplicación de Java, las consultas sean más cortas y sencillas de entender. 
 
 ## Capturas
 ![](./Img/Capturas/Login.png)
