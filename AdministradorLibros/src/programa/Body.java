@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import programa.OperacionesDB.ComprobarFechas;
 import programa.OperacionesDB.bibliotecario;
 import programa.OperacionesDB.libro;
 import programa.OperacionesDB.usuario;
@@ -106,6 +107,16 @@ public class Body extends javax.swing.JFrame {
         }
         listLibro.libroDisponible(modelo);
     }
+    
+    private void llenarTablaNegra(){
+        ComprobarFechas listNegra = new ComprobarFechas();
+        DefaultTableModel modelo= (DefaultTableModel) TablaNegra.getModel();
+        modelo.setColumnIdentifiers(new String[] {"Nombre","Libro","Fecha prestado","Fecha limite entrega",});
+        for(int i = modelo.getRowCount()-1; i >= 0; i--){
+            modelo.removeRow(i);
+        }
+        listNegra.listaNegra(modelo);
+    }
     //---------
     
 
@@ -198,7 +209,9 @@ public class Body extends javax.swing.JFrame {
         ConfirmarEntrega = new javax.swing.JButton();
         MensajeListaNegra = new javax.swing.JDialog();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaNegra = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         BarraMenu = new javax.swing.JPanel();
         TextAgregarLibro = new javax.swing.JLabel();
         BtnAgregarLibro = new javax.swing.JButton();
@@ -674,6 +687,7 @@ public class Body extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel22)
+                .addGap(0, 0, 0)
                 .addComponent(PrestarLibroBibliotecario, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PrestarLibroFecha, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
@@ -806,7 +820,7 @@ public class Body extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaNegra.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -814,22 +828,37 @@ public class Body extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Libro", "FechaPrestado", "FechaMaxEntrega"
             }
         ));
-        jScrollPane3.setViewportView(jTable1);
+        jScrollPane3.setViewportView(TablaNegra);
+
+        jLabel5.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        jLabel5.setText("Lista Negra");
+
+        jLabel6.setText("Estos usuarios han sido bloqueados en la plataforma porque no cumplieron con el plazo de entrega de los libros.");
 
         javax.swing.GroupLayout MensajeListaNegraLayout = new javax.swing.GroupLayout(MensajeListaNegra.getContentPane());
         MensajeListaNegra.getContentPane().setLayout(MensajeListaNegraLayout);
         MensajeListaNegraLayout.setHorizontalGroup(
             MensajeListaNegraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
+            .addComponent(jScrollPane3)
+            .addGroup(MensajeListaNegraLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(MensajeListaNegraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         MensajeListaNegraLayout.setVerticalGroup(
             MensajeListaNegraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MensajeListaNegraLayout.createSequentialGroup()
-                .addGap(0, 42, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1139,9 +1168,11 @@ public class Body extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        MensajeEntregarLibro.setVisible(true);
-        MensajeEntregarLibro.setLocationRelativeTo(this);
+
         MensajeEntregarLibro.setSize(400,300);
+        MensajeEntregarLibro.setLocationRelativeTo(this);
+        MensajeAgregarLibro.setModal(true);
+        MensajeEntregarLibro.setVisible(true);
         ConfirmarEntrega.setEnabled(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -1206,7 +1237,16 @@ public class Body extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnPrestarLibroActionPerformed
 
     private void BtnListaNegraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnListaNegraActionPerformed
-        // TODO add your handling code here:
+
+        //Mostrar mensaje Emergente
+        MensajeListaNegra.setSize(700, 400);
+        MensajeListaNegra.setLocationRelativeTo(this);
+        MensajeListaNegra.setModal(true);
+        new ComprobarFechas().init();
+        llenarTablaNegra();
+        MensajeListaNegra.setVisible(true);
+        //-------------------------       
+        
     }//GEN-LAST:event_BtnListaNegraActionPerformed
 
     private void BotonAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAgregarUsuarioActionPerformed
@@ -1230,13 +1270,13 @@ public class Body extends javax.swing.JFrame {
         
         libro nlibro = new libro(numeroLibroSolo(),FieldAgregarLibroAutor.getText(),FieldAgregarLibroNombre.getText(),FieldAgregarLibroEdicion.getText(),FieldAgregarLibroPaginas.getText(),FieldAgregarLibroGenero.getText());
         nlibro.agregarlibro();
-        llenarTablaLibros();
         FieldAgregarLibroAutor.setText("");
         FieldAgregarLibroCodigo.setText("");
         FieldAgregarLibroEdicion.setText("");
         FieldAgregarLibroGenero.setText("");
         FieldAgregarLibroNombre.setText("");
         FieldAgregarLibroPaginas.setText("");
+        llenarTablaLibros();
         MensajeAgregarLibro.setVisible(false);
         
     }//GEN-LAST:event_ButtonAgregarLibroActionPerformed
@@ -1256,8 +1296,7 @@ public class Body extends javax.swing.JFrame {
         
     
     private void AgregarPrestarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarPrestarLibroActionPerformed
-        
-        
+ 
         prestarLibro nuevoPrestar = new prestarLibro(
             PrestarLibroFecha.getText().substring(6,PrestarLibroFecha.getText().length()),
             PrestarLibroFechaLLegada.getText(),
@@ -1475,6 +1514,7 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> PrestarLibroTiempoMax;
     private javax.swing.JScrollPane ScrollSeleccionarLibro;
     private javax.swing.JList<String> SeleccionarLibro;
+    private javax.swing.JTable TablaNegra;
     private javax.swing.JTable TablaPrincipal;
     private javax.swing.JLabel TextAgregarBiblio;
     private javax.swing.JLabel TextAgregarLibro;
@@ -1507,6 +1547,8 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -1523,6 +1565,5 @@ public class Body extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

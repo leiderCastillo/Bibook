@@ -57,7 +57,7 @@ public class prestarLibro {
     
     public void realizar(){
         try {
-            String sql = "call prestarLibro(\""+fsalida+"\",\""+fingreso+"\",\""+idBibli+"\",\""+idUser+"\",\""+idLibro+"\",\""+entregado+"\")";
+            String sql = "call prestarLibro(\""+fsalida+"\",\""+fingreso+"\",\""+idBibli+"\",\""+idUser+"\",\""+idLibro+"\")";
             CallableStatement cmd = con.prepareCall(sql);
             ResultSet rs = cmd.executeQuery();            
         } catch (SQLException e) {
