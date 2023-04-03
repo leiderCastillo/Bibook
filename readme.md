@@ -32,7 +32,7 @@ Todo el sistema, donde se puede realizar
 - Lista negra,
 - Libros Prestados,
 - Libros Disponibles,
-- Ver los Bibliotecarios(Pero contiene una clave de seguridad),
+- Ver los Bibliotecarios
 
 ### OperacionesDB:
 Esta carpeta sirve de soporte para el funcionamiento completo de Body, es la encargada de conectarce a la base de datos y realizar las consultas.
